@@ -1,4 +1,5 @@
 import numpy as np
+from random import randint
 
 def random_predict(number:int=1)-> int:
     """ Guess a rand number
@@ -10,14 +11,24 @@ def random_predict(number:int=1)-> int:
         int: [description]
     """
 
-    count=0
+    #setting the boundaries for search and initial guess
+    count=0 
+    low=1
+    high=100
+    guess = (low+high)//2
 
-    while True:
+    #binary search algorithm slices the range in a half on each step until it finds the result
+    while guess != number:
         count+=1
-        predict_num = np.random.randint(1,101)
-        if number == predict_num:
-            break
-    return(count)
+        guess = (low+high)//2
+        #predict_num = randint(1,101)
+        if guess > number:
+            high = guess
+        elif guess < number:
+            low = guess + 1
+    return(count, number)
+
+
 def score_game(random_predict) -> int:
     """mean guessing score
 
@@ -32,10 +43,12 @@ def score_game(random_predict) -> int:
     random_array = np.random.randint(1,101,size=(1000))
 
     for number in random_array:
-        count_ls.append(random_predict(number))
+        count_ls.append(random_predict(number)[0])
     score = int(np.mean(count_ls))
-    print(f"угадываем в среднем за {score} попыток")
+    #print (count_ls)
+    print(f"Угадываем в среднем за {score} попыток")
     return score
 
 if __name__ == "__main__":
     score_game(random_predict)
+    print(f"Загаданное число: {random_predict(randint(1,101))[1]}")
